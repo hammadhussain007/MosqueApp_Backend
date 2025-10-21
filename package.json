@@ -1,0 +1,30 @@
+{
+  "name": "node-express-mysql-boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate for Node.js web applications with express and MySQL",
+  "main": "index.js",
+  "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "start": "nodemon index.js",
+  "postinstall": "node -e \"const fs=require('fs'); if(!fs.existsSync('.env') && fs.existsSync('.env-example')) fs.copyFileSync('.env-example', '.env');\""
+  },
+  "author": "Mangesh Ghadigaonkar",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "connect-session-sequelize": "^7.1.7",
+    "csurf": "^1.10.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-flash": "0.0.2",
+    "express-handlebars": "^8.0.1",
+    "express-session": "^1.18.1",
+    "mysql2": "^3.11.3",
+    "sequelize": "^6.37.5",
+    "validator": "^13.12.0"
+  }
+}

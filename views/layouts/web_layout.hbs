@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ pageTitle }}</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+	<!-- Favicons -->
+    <link rel="apple-touch-icon" href="/images/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/images/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/images/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/images/favicons/site.webmanifest">
+    <link rel="icon" href="/images/favicons/favicon.ico">
+</head>
+<body>
+	<div class="container py-3">
+		<header>
+			{{> nav}}
+			{{> intro}}
+		</header>
+		{{{ body }}}
+		{{> footer}}
+	</div>
+    <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+</body>
+</html>
