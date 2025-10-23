@@ -12,6 +12,7 @@ const app = express();
 const csrfProtection = csrf();
 
 const webRoutes = require('./routes/web');
+const apiRoutes = require('./routes/api');
 const sequelize = require('./config/database');
 const errorController = require('./app/controllers/ErrorController');
 
@@ -73,13 +74,29 @@ app.set('view engine', 'hbs');
 app.set('views', 'views');
 
 app.use(webRoutes);
+app.use(apiRoutes); // Mount API routes
 app.use(errorController.pageNotFound);
 
-sequelize.sync()
-	//.sync({ force: true })
-	.then(() => {
-		app.listen(process.env.PORT);
-		console.log('App listening on port ' + process.env.PORT);
-	})
-	.catch(err => console.log(err));
+// Test database connection
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Database connection established successfully.');
+    return sequelize.sync();
+  })
+  .then(() => {
+    app.listen(process.env.PORT);
+    console.log('App listening on port ' + process.env.PORT);
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+    console.error('Database Config:', {
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      database: process.env.DB_DATABASE,
+      username: process.env.DB_USERNAME,
+      // Don't log the password for security
+    });
+    process.exit(1);
+  });
 

@@ -8,7 +8,10 @@ const User = sequelize.define('users', {
 			allowNull: false,
 			primaryKey: true
 		},
-		fullName: DataTypes.STRING,
+		fullName: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
 		email: {
 			type: DataTypes.STRING,
 			allowNull: false
@@ -17,15 +20,27 @@ const User = sequelize.define('users', {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
+		phone: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		address: {
+			type: DataTypes.TEXT,
+			allowNull: true
+		},
+		avatar: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 		resetToken: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
 		resetTokenExpiry: {
 			type: DataTypes.DATE,
-			allowNull:true
+			allowNull: true
 		}
-  	},
+	},
 	{
 		indexes: [
 			// Create a unique index on email

@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int       @id @default(autoincrement())
+  email           String    @unique
+  password        String
+  fullName        String
+  phone           String?
+  address         String?   @db.Text
+  avatar          String?
+  role            String    @default("user") // "user" or "admin"
+  resetToken      String?
+  resetTokenExpiry DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  sessions        Session[]
+  posts           ForumPost[]
+  comments        Comment[]
+  likes           Like[]
+  announcements   Announcement[]
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model ForumPost {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String    @db.Text
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    Int
+  comments    Comment[]
+  likes       Like[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([authorId])
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+  content     String    @db.Text
+  post        ForumPost @relation(fields: [postId], references: [id])
+  postId      Int
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([postId])
+  @@index([authorId])
+}
+
+model Like {
+  id          Int       @id @default(autoincrement())
+  post        ForumPost @relation(fields: [postId], references: [id])
+  postId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime  @default(now())
+
+  @@unique([postId, userId])
+  @@index([userId])
+}
+
+model Announcement {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String    @db.Text
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([authorId])
+}
