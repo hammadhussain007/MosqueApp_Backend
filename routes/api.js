@@ -4,6 +4,7 @@ const ApiAuthController = require('../app/controllers/ApiAuthController');
 const ProfileController = require('../app/controllers/ProfileController');
 const ForumController = require('../app/controllers/ForumController');
 const AnnouncementController = require('../app/controllers/AnnouncementController');
+const NotificationController = require('../app/controllers/NotificationController');
 const isApiAuth = require('../app/middlewares/isApiAuth');
 
 // Auth routes
@@ -26,5 +27,8 @@ router.post('/api/forum/posts/like', isApiAuth, ForumController.toggleLike);
 // Announcement routes (protected by auth middleware)
 router.get('/api/announcements', isApiAuth, AnnouncementController.getAllAnnouncements);
 router.post('/api/announcements', isApiAuth, AnnouncementController.createAnnouncement);
+
+// Notifications (protected by auth middleware)
+router.get('/api/notifications', isApiAuth, NotificationController.getNotifications);
 
 module.exports = router;
