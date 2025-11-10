@@ -33,13 +33,18 @@ const User = sequelize.define('users', {
 			allowNull: true
 		},
 		resetToken: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		resetTokenExpiry: {
-			type: DataTypes.DATE,
-			allowNull: true
-		}
+		type: DataTypes.STRING,
+		allowNull: true
+	},
+	resetTokenExpiry: {
+		type: DataTypes.DATE,
+		allowNull: true
+	},
+	role: {
+		type: DataTypes.STRING,
+		allowNull: false,
+		defaultValue: 'user'
+	}
 	},
 	{
 		indexes: [
