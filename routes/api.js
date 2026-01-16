@@ -5,7 +5,9 @@ const ProfileController = require('../app/controllers/ProfileController');
 const ForumController = require('../app/controllers/ForumController');
 const AnnouncementController = require('../app/controllers/AnnouncementController');
 const NotificationController = require('../app/controllers/NotificationController');
+const KhutbahController = require('../app/controllers/KhutbahController');
 const isApiAuth = require('../app/middlewares/isApiAuth');
+const isImam = require('../app/middlewares/isImam');
 
 // Auth routes
 router.post('/api/login', ApiAuthController.login);
@@ -21,6 +23,7 @@ router.post('/api/profile/avatar', isApiAuth, ProfileController.updateAvatar);
 router.get('/api/forum/posts', isApiAuth, ForumController.getAllPosts);
 router.get('/api/forum/posts/:id', isApiAuth, ForumController.getPostById);
 router.post('/api/forum/posts', isApiAuth, ForumController.createPost);
+router.delete('/api/forum/posts/:id', isApiAuth, ForumController.deletePost);
 router.post('/api/forum/posts/comment', isApiAuth, ForumController.addComment);
 router.post('/api/forum/posts/like', isApiAuth, ForumController.toggleLike);
 
@@ -30,5 +33,15 @@ router.post('/api/announcements', isApiAuth, AnnouncementController.createAnnoun
 
 // Notifications (protected by auth middleware)
 router.get('/api/notifications', isApiAuth, NotificationController.getNotifications);
+
+// Khutbah Topic Suggestions (Imam Dashboard)
+router.post('/api/khutbah/analyze', isApiAuth, isImam, KhutbahController.analyzeAndGenerateSuggestions.bind(KhutbahController));
+router.post('/api/khutbah/manual', isApiAuth, isImam, KhutbahController.createManualTopic.bind(KhutbahController));
+router.post('/api/khutbah/search', isApiAuth, isImam, KhutbahController.searchIslamicContent.bind(KhutbahController));
+router.post('/api/khutbah/save-curated', isApiAuth, isImam, KhutbahController.saveCuratedTopic.bind(KhutbahController));
+router.get('/api/khutbah/suggestions', isApiAuth, isImam, KhutbahController.getSuggestions.bind(KhutbahController));
+router.get('/api/khutbah/suggestions/:id', isApiAuth, isImam, KhutbahController.getTopicDetail.bind(KhutbahController));
+router.post('/api/khutbah/suggestions/:id/select', isApiAuth, isImam, KhutbahController.selectTopic.bind(KhutbahController));
+router.post('/api/khutbah/suggestions/:id/delivered', isApiAuth, isImam, KhutbahController.markAsDelivered.bind(KhutbahController));
 
 module.exports = router;

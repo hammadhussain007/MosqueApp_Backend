@@ -171,3 +171,59 @@ exports.toggleLike = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+exports.deletePost = async (req, res) => {
+    const postId = parseInt(req.params.id);
+    const userId = req.userId;
+
+    try {
+        // Find the post
+        const post = await prisma.forumPost.findUnique({
+            where: { id: postId },
+            include: {
+                author: { select: { id: true, role: true } }
+            }
+        });
+
+        if (!post) {
+            return res.status(404).json({ 
+                success: false,
+                error: 'Post not found' 
+            });
+        }
+
+        // Get current user to check role
+        const currentUser = await prisma.user.findUnique({
+            where: { id: userId }
+        });
+
+        // Check if user is admin or post author
+        const isAdmin = currentUser.role === 'admin';
+        const isAuthor = post.authorId === userId;
+
+        if (!isAdmin && !isAuthor) {
+            return res.status(403).json({ 
+                success: false,
+                error: 'You do not have permission to delete this post' 
+            });
+        }
+
+        // Delete related records first (cascade)
+        await prisma.like.deleteMany({ where: { postId } });
+        await prisma.comment.deleteMany({ where: { postId } });
+        
+        // Delete the post
+        await prisma.forumPost.delete({ where: { id: postId } });
+
+        res.json({ 
+            success: true,
+            message: 'Post deleted successfully' 
+        });
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        res.status(500).json({ 
+            success: false,
+            error: error.message 
+        });
+    }
+};

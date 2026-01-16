@@ -21,7 +21,7 @@ model User {
   phone           String?
   address         String?   @db.Text
   avatar          String?
-  role            String    @default("user") // "user" or "admin"
+  role            String    @default("user") // "user", "admin", or "imam"
   resetToken      String?
   resetTokenExpiry DateTime?
   createdAt       DateTime  @default(now())
@@ -31,6 +31,27 @@ model User {
   comments        Comment[]
   likes           Like[]
   announcements   Announcement[]
+  khutbahSuggestions KhutbahSuggestion[]
+}
+
+model KhutbahSuggestion {
+  id              Int       @id @default(autoincrement())
+  topic           String
+  description     String    @db.Text
+  relevanceScore  Float     @default(0.0)
+  supportingAyah  String?   @db.Text // JSON array of Quranic verses
+  supportingHadith String?  @db.Text // JSON array of Hadith references
+  analyzedThreadIds String? @db.Text // JSON array of forum post IDs
+  status          String    @default("suggested") // "suggested", "selected", "delivered"
+  imam            User?     @relation(fields: [imamId], references: [id])
+  imamId          Int?
+  selectedAt      DateTime?
+  deliveredAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([imamId])
+  @@index([status])
 }
 
 model Session {
